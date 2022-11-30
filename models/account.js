@@ -9,8 +9,8 @@ const users=Database.define('user',{
         allowNull: false,
         primaryKey: true
     },
-    firstName:{ type:Sequelize.STRING},
-    lastName:{type:Sequelize.STRING},
+    firstName:Sequelize.STRING,
+    lastName:Sequelize.STRING,
     email:{type:Sequelize.STRING,allowNull:false},
     password:{type:Sequelize.STRING,allowNull:false},
     isAproved:{type:Sequelize.BOOLEAN}
