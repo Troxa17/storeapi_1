@@ -3,6 +3,7 @@ const router=express.Router();
 import bcryptjs from 'bcryptjs';
 import Account from '../models/account.js';
 
+//CRUD(Create,Read,update,Delete)
 
 //Create new account
 router.post('/CreateNewAccount',async(req,res)=>{
@@ -31,7 +32,7 @@ router.post('/CreateNewAccount',async(req,res)=>{
                 })
                 .catch(error =>{
                     return res.status(500).json({
-                        message:error
+                        message:error.message
                     })
                 })
         }
@@ -56,9 +57,63 @@ router.get('/GetAllUsers', async(req,res)=>{
     })
     .catch(error=>{
         return res.status(500).json({
-            message:error
+            message:error.message
         })
     })
+})
+
+//Update account
+router.put('/UpdateAccount',async(req,res)=>{
+    const {firstName,lastName,id}=req.body;
+    Account.findByPk(id)
+    .then(account =>{
+        account.firstName=firstName;
+        account.lastName=lastName;
+        account.save()
+        .then(update_account =>{
+            return res.status(200).json({
+                message:update_account
+            })
+        })
+        .catch(error =>{
+            return res.status(500).json({
+                message:error.message
+            })
+        })
+        })
+    .catch(error=>{
+        return res.status(500).json({
+            message:error.message
+        })
+    })
+
+
+})
+
+//Delete account
+router.delete('/DeleteAccount/:account_id',async(req,res)=>{
+    const acc_id=req.params.account_id;
+    Account.findByPk(acc_id)
+    .then(account =>{
+        account.destroy()
+        .then(removed =>{
+            return res.status(200).json({
+                message:"Account removed"
+            })
+        })
+        .catch(error=>{
+            return res.status(500).json({
+                message:error.message
+            })
+        })
+    })
+    .catch(error=>{
+        return res.status(500).json({
+            message:error.message
+        })
+    })
+
+
 })
 
 export default router;
