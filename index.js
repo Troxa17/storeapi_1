@@ -6,6 +6,7 @@ import database from './database.js'
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUiExpress from "swagger-ui-express"
 
+
 const app=express();
 
 app.use(express.json());

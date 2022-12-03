@@ -2,6 +2,7 @@ import express from 'express';
 const router=express.Router();
 import bcryptjs from 'bcryptjs';
 import Account from '../models/account.js';
+import jwt from 'jsonwebtoken';
 
 function getRandomInteger(min,max) {
     let x=Math.floor(Math.random()*(max-min+1))+min;
@@ -161,7 +162,61 @@ router.put('/verify',async (req,res)=>{
     })
 })
 
+//Login
+router.post('/login',async(req,res)=>{
+    //Get data
+    const{email,password}=req.body;
+    //Check if exist
+    Account.findAll({where:{email:email}})
+    .then(async account=>{
+        if(account.length>0){
+            //Check password
+            const user=account[0];
+            const isMatch=await bcryptjs.compare(password,user.password);
+            if(isMatch){
+                //Check if verify
+                if(user.isAproved){
+                    //Create token
+                    const data={
+                        id:user.id,
+                        name:user.firstName+' '+user.lastName,
+                        email:user.email
+                    }
 
+                    const token=await jwt.sign({data},'IJalG2wlJ5OSEQYI2VpLORTT5hi30Udw');
+                        return res.status(200).json({
+                            user:user,
+                            token:token
+                        })
+                }       
+                //Respones
+                else{
+                    return res.status(200).json({
+                        message:"Account is not verify"
+                    })
+                }
+            }
+            else{
+                return res.status(200).json({
+                    message:"Password is not match"
+                })
+            }
+        }
+        else{
+            return res.status(200).json({
+                message:"Account is not found"
+            })
+        }
+    })
+    .catch(error=>{
+        return res.status(500).json({
+            message:error.message
+        })
+    })
+
+
+
+})
 
 
 export default router;
