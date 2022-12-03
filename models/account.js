@@ -13,7 +13,8 @@ const users=Database.define('user',{
     lastName:Sequelize.STRING,
     email:{type:Sequelize.STRING,allowNull:false},
     password:{type:Sequelize.STRING,allowNull:false},
-    isAproved:{type:Sequelize.BOOLEAN}
+    isAproved:{type:Sequelize.BOOLEAN},
+    passcode:Sequelize.INTEGER
 })
 
 export default users;
