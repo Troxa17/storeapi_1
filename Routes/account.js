@@ -3,6 +3,7 @@ const router=express.Router();
 import bcryptjs from 'bcryptjs';
 import Account from '../models/account.js';
 import jwt from 'jsonwebtoken';
+import isAuth from './auth.js'
 
 function getRandomInteger(min,max) {
     let x=Math.floor(Math.random()*(max-min+1))+min;
@@ -12,7 +13,7 @@ function getRandomInteger(min,max) {
 //CRUD(Create,Read,update,Delete)
 
 //Create new account
-router.post('/CreateNewAccount',async(req,res)=>{
+router.post('/CreateNewAccount',isAuth,async(req,res)=>{
     
     //Get user data
     const {firstName,lastName,email,password}= req.body;
@@ -53,7 +54,7 @@ router.post('/CreateNewAccount',async(req,res)=>{
     })
 
 //Get all account
-router.get('/GetAllUsers', async(req,res)=>{
+router.get('/GetAllUsers',isAuth,async(req,res)=>{
     Account.findAll()
     .then(accounts=> {
         return res.status(200).json({
@@ -68,8 +69,9 @@ router.get('/GetAllUsers', async(req,res)=>{
 })
 
 //Update account
-router.put('/UpdateAccount',async(req,res)=>{
-    const {firstName,lastName,id}=req.body;
+router.put('/UpdateAccount',isAuth,async(req,res)=>{
+    const id=req.account.id;
+    const {firstName,lastName}=req.body;
     Account.findByPk(id)
     .then(account =>{
         account.firstName=firstName;
@@ -96,7 +98,7 @@ router.put('/UpdateAccount',async(req,res)=>{
 })
 
 //Delete account
-router.delete('/DeleteAccount/:account_id',async(req,res)=>{
+router.delete('/DeleteAccount/:account_id',isAuth,async(req,res)=>{
     const acc_id=req.params.account_id;
     Account.findByPk(acc_id)
     .then(account =>{
@@ -122,7 +124,7 @@ router.delete('/DeleteAccount/:account_id',async(req,res)=>{
 })
 
 //Verify
-router.put('/verify',async (req,res)=>{
+router.put('/verify',isAuth,async (req,res)=>{
     const{email,code}=req.body;
     Account.findAll({where:{email:email}})
     .then(async account=>{
@@ -163,7 +165,7 @@ router.put('/verify',async (req,res)=>{
 })
 
 //Login
-router.post('/login',async(req,res)=>{
+router.post('/login',isAuth,async(req,res)=>{
     //Get data
     const{email,password}=req.body;
     //Check if exist
