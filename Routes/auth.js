@@ -1,5 +1,4 @@
 import jwt from "jsonwebtoken";
-import { INET } from "sequelize";
 import Account from '../models/account.js'
 
 

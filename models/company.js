@@ -8,10 +8,10 @@ const category=Database.define('category',{
         allowNull: false,
         primaryKey: true
     },
-    clothes:Sequelize.STRING,
-    electric:Sequelize.STRING,
-    media:{type:Sequelize.STRING,allowNull:false},
-    sport:{type:Sequelize.STRING,allowNull:false},
+    nameCompany:Sequelize.STRING,
+    type:Sequelize.STRING,
+    year:{type:Sequelize.STRING,allowNull:false},
+    location:{type:Sequelize.STRING,allowNull:false},
     
 })
 
